@@ -1,13 +1,15 @@
 let exit = false;
-let maxtries = 5;
+let maxtries = 6;
 	
 let input = document.querySelector('input');
 let win = document.querySelector('#win');
 let hint = document.querySelector('#hint');
+let hint_initial = document.querySelector("#hintinitial");
 let attempt = document.querySelector('#attempt');
+let chibi = document.querySelector('#chibi')
 	
 let tries = 0;
-
+let anslist = ["cream","range","right"]
 fetch('words.txt')
 .then(response => response.text())
 .then(wordlist => wordlist.split('\n'))
@@ -29,6 +31,14 @@ function addGuessDisplay(answer, guess, len, hint) {
 	
 }
 
+function image(thisImg) {
+	var img = document.createElement("IMG");
+	img.src = thisImg;
+	img.style.width = 250+"px";
+	img.style.maxWidth = 600+"px";
+	document.getElementById('chibi').appendChild(img);
+}
+
 function checkAnswer(event, answer, len, wordlist) {
 	
 	event.preventDefault();
@@ -39,13 +49,15 @@ function checkAnswer(event, answer, len, wordlist) {
 			addGuessDisplay(answer, input.value, len, hint);
 			tries++;
 			if (input.value == answer) {
-				win.innerHTML = "You won!";
+				win.innerHTML = "You won :)";
+                image("pat pat.gif");
 				exit = true;
 			} else {
 				win.innerHTML = "Not quite right!";
 			}
 			if (tries >= maxtries && !exit) {
-				win.innerHTML = "You lost! Better luck next time!";
+				win.innerHTML = "You lost :( </br> Better luck next time! </br> The word was " + answer;
+				image("better luck nxt time.gif");
 				exit = true;
 			}
 			attempt.innerHTML = tries + " attempt";
@@ -56,19 +68,25 @@ function checkAnswer(event, answer, len, wordlist) {
 	}
 }
 
+function redirectTomenu() {
+    window.location.href = "wordle.html";
+}
+
 function main(wordlist) {
 	
-	let wordlen = wordlist.length;
+	let wordlen = anslist.length;
 	let randomword = Math.floor(Math.random() * wordlen);
 
-	let answer = wordlist[randomword];
+	let answer = anslist[randomword];
 	console.log(answer);
 	let len = answer.length;
 	
 	input.setAttribute("maxlength", len);
-	hint.innerHTML = "Word is of length: " + len + "</br>";
+	hint_initial.innerHTML = "Word is of length: " + len + "</br>";
 	
 	let form = document.querySelector('form');
-	form.addEventListener("submit", function() { checkAnswer(event, answer, len, wordlist); });
+	form.addEventListener("submit", function() { checkAnswer(event, answer, len, wordlist);
+		document.getElementById('raju').value = ""; });
+	
 
 }
